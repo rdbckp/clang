@@ -1,0 +1,35 @@
+name: Sedot clang
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Working for clang
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        git clone https://github.com/a02-trial/toolchain -b clang11
+        cd toolchain && mv * ${GITHUB_WORKSPACE}
+        cd ..
+        ls
+        rm -rf toolchain
+        
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "actions@github.com"
+        
+    - name: Add and Commit file
+      run: |
+        git add *
+        git commit -m "initial tree"
+        git push
